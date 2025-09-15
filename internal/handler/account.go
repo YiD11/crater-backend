@@ -975,17 +975,16 @@ func (mgr *AccountMgr) PutUserInProject(c *gin.Context) {
 		updates["access_mode"] = model.AccessMode(uint8(access))
 	}
 	if req.Quota != nil {
-		validResourceFormat := "validate PutUserInProject parameters failed, detail: %s"
 		if err := checkResource(c, req.Quota.Data().Guaranteed); err != nil {
-			resputil.Error(c, fmt.Sprintf(validResourceFormat, err.Error()), resputil.NotSpecified)
+			resputil.Error(c, fmt.Sprintf("%s", err.Error()), resputil.NotSpecified)
 			return
 		}
 		if err := checkResource(c, req.Quota.Data().Deserved); err != nil {
-			resputil.Error(c, fmt.Sprintf(validResourceFormat, err.Error()), resputil.NotSpecified)
+			resputil.Error(c, fmt.Sprintf("%s", err.Error()), resputil.NotSpecified)
 			return
 		}
 		if err := checkResource(c, req.Quota.Data().Capability); err != nil {
-			resputil.Error(c, fmt.Sprintf(validResourceFormat, err.Error()), resputil.NotSpecified)
+			resputil.Error(c, fmt.Sprintf("%s", err.Error()), resputil.NotSpecified)
 			return
 		}
 		updates["quota"] = *req.Quota
@@ -1007,7 +1006,7 @@ func (mgr *AccountMgr) PutUserInProject(c *gin.Context) {
 func checkResource(_ *gin.Context, ls v1.ResourceList) error {
 	for k, v := range ls {
 		if i, ok := v.AsInt64(); ok && i < 0 {
-			return fmt.Errorf("resource %s invalid, is %d", k, i)
+			return fmt.Errorf("%s: %d invalid", k, i)
 		}
 	}
 	return nil
