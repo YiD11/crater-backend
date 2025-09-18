@@ -2244,18 +2244,42 @@ paths:
     get:
       consumes:
       - application/json
-      description: sql查询-join
+      description: 更新账户下的用户数据
       parameters:
       - description: aid
         in: path
-        name: aid
+        name: Accountid
         required: true
         type: integer
+      - description: uid
+        in: body
+        name: UserId
+        required: true
+        schema:
+          type: integer
+      - description: role
+        in: body
+        name: Role
+        required: true
+        schema:
+          type: string
+      - description: accessmode
+        in: body
+        name: AccessMode
+        required: true
+        schema:
+          type: string
+      - description: quota
+        in: body
+        name: Quota
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
       responses:
         "200":
-          description: userQueue条目
+          description: 被成功更新的帐户用户(aid, uid)
           schema:
             $ref: '#/definitions/github_com_raids-lab_crater_internal_resputil.Response-any'
         "400":
@@ -2268,7 +2292,7 @@ paths:
             $ref: '#/definitions/github_com_raids-lab_crater_internal_resputil.Response-any'
       security:
       - Bearer: []
-      summary: 获取账户下的用户
+      summary: 更新账户下的用户数据
       tags:
       - Project
   /v1/admin/projects/userOutOf/{aid}:

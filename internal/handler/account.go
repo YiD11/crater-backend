@@ -943,6 +943,23 @@ type PutUserInProjectResp struct {
 	UserId    uint `json:"uid" binding:"required"`
 }
 
+// / PutUserInProject godoc
+//
+//	@Summary		更新账户下的用户数据
+//	@Description	更新账户下的用户数据
+//	@Tags			Project
+//	@Accept			json
+//	@Produce		json
+//	@Security		Bearer
+//	@Param			Accountid		path		uint					true	"aid"
+//	@Param			UserId			body		uint					true	"uid"
+//	@Param			Role			body		string					true	"role"
+//	@Param			AccessMode		body		string					true	"accessmode"
+//	@Param			Quota			body		string					true	"quota"
+//	@Success		200	{object}	resputil.Response[any]	"被成功更新的帐户用户(aid, uid)"
+//	@Failure		400	{object}	resputil.Response[any]	"Request parameter error"
+//	@Failure		500	{object}	resputil.Response[any]	"Other errors"
+//	@Router			/v1/admin/projects/userIn/{aid} [get]
 func (mgr *AccountMgr) PutUserInProject(c *gin.Context) {
 	uriReq := PutUserInProjectUriReq{}
 	req := &PutUserInProjectReq{}

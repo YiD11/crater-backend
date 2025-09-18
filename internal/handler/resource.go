@@ -8,6 +8,9 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/klog/v2"
+
+	"github.com/raids-lab/crater/pkg/aitaskctl"
 
 	"github.com/raids-lab/crater/dao/model"
 	"github.com/raids-lab/crater/dao/query"
@@ -39,6 +42,7 @@ func (mgr *ResourceMgr) RegisterProtected(g *gin.RouterGroup) {
 	g.GET("", mgr.ListResource)
 	g.GET("/:id/networks", mgr.GetGPUNetworks)
 	g.GET(":id/vgpu", mgr.GetGPUVGPUResources)
+	g.GET("/:id/jupyter/limit/:aid", mgr.QueryCheckUserJupyterResourceLimit)
 }
 
 //nolint:dupl // ignore duplicate code
@@ -757,4 +761,27 @@ func (mgr *ResourceMgr) DeleteGPUVGPULink(c *gin.Context) {
 	}
 
 	resputil.Success(c, nil)
+}
+
+type QueryCheckUserJupyterResourceLimitUriReq struct {
+	AccountId uint `uri:"aid" binding:"required"`
+	UserId    uint `uri:"id" binding:"required"`
+}
+
+type QueryCheckUserJupyterResourceLimitUriResp struct {
+	CanCreate bool `json:"canCreate"`
+}
+
+func (mgr *ResourceMgr) QueryCheckUserJupyterResourceLimit(c *gin.Context) {
+	req := &QueryCheckUserJupyterResourceLimitUriReq{}
+	ret := &QueryCheckUserJupyterResourceLimitUriResp{CanCreate: true}
+	if err := c.ShouldBindUri(req); err != nil {
+		resputil.Error(c, err.Error(), resputil.ServiceError)
+		klog.Errorf("[ResourceMgr.QueryCheckUserJupyterResourceLimit] ShouldBindUri failed, err: %v", err)
+		return
+	}
+	if err := aitaskctl.CheckJupyterLimitBeforeCreateJupyter(c, req.UserId, req.AccountId); err != nil {
+		ret.CanCreate = false
+	}
+	resputil.Success(c, ret)
 }

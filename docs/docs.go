@@ -1182,7 +1182,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "sql查询-join",
+                "description": "更新账户下的用户数据",
                 "consumes": [
                     "application/json"
                 ],
@@ -1192,19 +1192,55 @@ const docTemplate = `{
                 "tags": [
                     "Project"
                 ],
-                "summary": "获取账户下的用户",
+                "summary": "更新账户下的用户数据",
                 "parameters": [
                     {
                         "type": "integer",
                         "description": "aid",
-                        "name": "aid",
+                        "name": "Accountid",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "uid",
+                        "name": "UserId",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "role",
+                        "name": "Role",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "accessmode",
+                        "name": "AccessMode",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "quota",
+                        "name": "Quota",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "userQueue条目",
+                        "description": "被成功更新的帐户用户(aid, uid)",
                         "schema": {
                             "$ref": "#/definitions/github_com_raids-lab_crater_internal_resputil.Response-any"
                         }
