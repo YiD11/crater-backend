@@ -976,15 +976,15 @@ func (mgr *AccountMgr) PutUserInProject(c *gin.Context) {
 	}
 	if req.Quota != nil {
 		if err := checkResource(c, req.Quota.Data().Guaranteed); err != nil {
-			resputil.Error(c, fmt.Sprintf("%s", err.Error()), resputil.NotSpecified)
+			resputil.Error(c, err.Error(), resputil.NotSpecified)
 			return
 		}
 		if err := checkResource(c, req.Quota.Data().Deserved); err != nil {
-			resputil.Error(c, fmt.Sprintf("%s", err.Error()), resputil.NotSpecified)
+			resputil.Error(c, err.Error(), resputil.NotSpecified)
 			return
 		}
 		if err := checkResource(c, req.Quota.Data().Capability); err != nil {
-			resputil.Error(c, fmt.Sprintf("%s", err.Error()), resputil.NotSpecified)
+			resputil.Error(c, err.Error(), resputil.NotSpecified)
 			return
 		}
 		updates["quota"] = *req.Quota
